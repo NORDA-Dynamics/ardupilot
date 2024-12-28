@@ -73,6 +73,8 @@ public:
     bool       in_trim_dz() const;
 
     int16_t    get_radio_in() const { return radio_in;}
+    int16_t    get_radio_in_raw() const { return radio_in_raw;}
+
     void       set_radio_in(int16_t val) {radio_in = val;}
 
     int16_t    get_control_in() const { return control_in;}
@@ -402,6 +404,7 @@ private:
 
     // pwm is stored here
     int16_t     radio_in;
+    int16_t     radio_in_raw;
 
     // value generated from PWM normalised to configured scale
     int16_t    control_in;
@@ -487,6 +490,14 @@ public:
         }
         return c->get_radio_in();
     }
+    // compatability functions for Plane:
+    static uint16_t get_radio_in_raw(const uint8_t chan) {
+        RC_Channel *c = _singleton->channel(chan);
+        if (c == nullptr) {
+            return 0;
+        }
+        return c->get_radio_in_raw();
+    }
     static RC_Channel *rc_channel(const uint8_t chan) {
         return _singleton->channel(chan);
     }
@@ -502,7 +513,8 @@ public:
     }
 
     uint8_t get_radio_in(uint16_t *chans, const uint8_t num_channels); // reads a block of chanel radio_in values starting from channel 0
-                                                                       // returns the number of valid channels
+    uint8_t get_radio_in_raw(uint16_t *chans, const uint8_t num_channels); // reads a block of chanel radio_in values starting from channel 0
+                                                                      // returns the number of valid channels
 
     static uint8_t get_valid_channel_count(void);                      // returns the number of valid channels in the last read
     static int16_t get_receiver_rssi(void);                            // returns [0, 255] for receiver RSSI (0 is no link) if present, otherwise -1

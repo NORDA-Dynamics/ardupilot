@@ -70,6 +70,19 @@ uint8_t RC_Channels::get_radio_in(uint16_t *chans, const uint8_t num_channels)
     return read_channels;
 }
 
+
+uint8_t RC_Channels::get_radio_in_raw(uint16_t *chans, const uint8_t num_channels)
+{
+    memset(chans, 0, num_channels*sizeof(*chans));
+
+    const uint8_t read_channels = MIN(num_channels, NUM_RC_CHANNELS);
+    for (uint8_t i = 0; i < read_channels; i++) {
+        chans[i] = channel(i)->get_radio_in_raw();
+    }
+
+    return read_channels;
+}
+
 // update all the input channels
 bool RC_Channels::read_input(void)
 {
