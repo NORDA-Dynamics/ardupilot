@@ -213,6 +213,10 @@ public:
         k_lights1               = 181,
         k_lights2               = 182,
         k_video_switch          = 183,
+        k_canard1               = 184,          ///< front right canard
+        k_canard2               = 185,          ///< front left canard
+        k_canard3               = 186,          ///< back left canard
+        k_canard4               = 187,          ///< back right canard
         k_nr_aux_servo_functions         ///< This must be the last enum value (only add new values _before_ this one)
     } Function;
 

@@ -359,6 +359,12 @@ void Plane::trim_radio()
     // trim vtail
     SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_vtail_left);
     SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_vtail_right);
+
+    // trim canard
+    SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_canard1);
+    SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_canard2);
+    SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_canard3);
+    SRV_Channels::set_trim_to_servo_out_for(SRV_Channel::k_canard4);
     
     if (is_zero(SRV_Channels::get_output_scaled(SRV_Channel::k_rudder))) {
         // trim differential spoilers if no rudder input

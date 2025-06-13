@@ -1013,6 +1013,9 @@ void Plane::servos_output(void)
     // run vtail and elevon mixers
     channel_function_mixer(SRV_Channel::k_aileron, SRV_Channel::k_elevator, SRV_Channel::k_elevon_left, SRV_Channel::k_elevon_right);
     channel_function_mixer(SRV_Channel::k_rudder,  SRV_Channel::k_elevator, SRV_Channel::k_vtail_right, SRV_Channel::k_vtail_left);
+    
+    // run canard mixer
+    canard_update();
 
 #if HAL_QUADPLANE_ENABLED
     // cope with tailsitters and bicopters
@@ -1141,4 +1144,34 @@ void Plane::servos_auto_trim(void)
         g2.servo_channels.save_trim();
     }
     
+}
+
+/*
+  update canard mixing. This implements an X-configuration mixing for pitch, yaw, and roll control
+ */
+void Plane::canard_update(void)
+{
+    // Get control inputs
+    float pitch_scaled = SRV_Channels::get_output_scaled(SRV_Channel::k_elevator);
+    float yaw_scaled = SRV_Channels::get_output_scaled(SRV_Channel::k_rudder);
+    float roll_scaled = SRV_Channels::get_output_scaled(SRV_Channel::k_aileron);
+
+    // Apply mixing based on the formulas:
+    // δ₁ = -P + Y + R  (front right)
+    // δ₂ = +P + Y + R  (front left)
+    // δ₃ = +P - Y + R  (back left)
+    // δ₄ = -P - Y + R  (back right)
+    
+
+    // Calculate canard outputs
+    float canard1 = constrain_float((-pitch_scaled + yaw_scaled + roll_scaled) * g.mixing_gain, -4500, 4500);
+    float canard2 = constrain_float((pitch_scaled + yaw_scaled + roll_scaled) * g.mixing_gain, -4500, 4500);
+    float canard3 = constrain_float((pitch_scaled - yaw_scaled + roll_scaled) * g.mixing_gain, -4500, 4500);
+    float canard4 = constrain_float((-pitch_scaled - yaw_scaled + roll_scaled) * g.mixing_gain, -4500, 4500);
+
+    // Set outputs
+    SRV_Channels::set_output_scaled(SRV_Channel::k_canard1, canard1);
+    SRV_Channels::set_output_scaled(SRV_Channel::k_canard2, canard2);
+    SRV_Channels::set_output_scaled(SRV_Channel::k_canard3, canard3);
+    SRV_Channels::set_output_scaled(SRV_Channel::k_canard4, canard4);
 }

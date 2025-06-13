@@ -1182,6 +1182,7 @@ private:
                                 SRV_Channel::Function func1_out, SRV_Channel::Function func2_out) const;
     void flaperon_update();
     void indicate_waiting_for_rud_neutral_to_takeoff(void);
+    void canard_update(void);
 
     // is_flying.cpp
     void update_is_flying_5Hz(void);

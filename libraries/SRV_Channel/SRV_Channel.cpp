@@ -166,6 +166,7 @@ const AP_Param::GroupInfo SRV_Channel::var_info[] = {
     // @Values: 180:CameraZoom
     // @Values{Sub}: 181:Lights1,182:Lights2
     // @Values{Sub}: 183:VideoSwitch
+    // @Values{Plane}: 184:Canard1,185:Canard2,186:Canard3,187:Canard4
     // @User: Standard
     // @RebootRequired: True
     AP_GROUPINFO("FUNCTION",  5, SRV_Channel, function, 0),
@@ -372,6 +373,10 @@ bool SRV_Channel::is_control_surface(SRV_Channel::Function function)
     case Function::k_vtail_left:
     case Function::k_vtail_right:
     case Function::k_airbrake:
+    case Function::k_canard1:  // Front Right
+    case Function::k_canard2:  // Front Left
+    case Function::k_canard3:  // Back Left
+    case Function::k_canard4:  // Back Right
         return true;
 
     default:
